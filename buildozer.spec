@@ -14,7 +14,6 @@ android.minapi = 21
 android.ndk = 25b
 android.accept_sdk_license = True
 android.skip_update = False
-p4a.branch = master
 
 [buildozer]
 log_level = 2
