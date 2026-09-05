@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v4
@@ -17,9 +17,6 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: '17'
-
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
 
     - name: Set up Python
       uses: actions/setup-python@v5
@@ -34,16 +31,14 @@ jobs:
     - name: Install Python Dependencies
       run: |
         pip install --upgrade pip
-        pip install buildozer kivy yt-dlp
+        pip install "buildozer<1.6.0" kivy yt-dlp
 
-    - name: Auto Accept Licenses & Build APK
+    - name: Build APK with Buildozer
       run: |
-        yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses || true
-        yes | buildozer -v android debug
+        buildozer -v android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-release
         path: bin/*.apk
-        
