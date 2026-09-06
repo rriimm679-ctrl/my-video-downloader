@@ -42,4 +42,3 @@ class DownloaderApp(App):
 
 if __name__ == "__main__":
     DownloaderApp().run()
-      
