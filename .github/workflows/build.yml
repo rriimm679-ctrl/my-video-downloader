@@ -37,6 +37,16 @@ jobs:
       run: |
         buildozer -v android debug
 
+    - name: Sign APK for MIUI/Redmi
+      run: |
+        sudo apt-get install -y apksigner zipalign
+        cd bin/
+        APK_FILE=$(ls *.apk)
+        zipalign -v 4 $APK_FILE aligned.apk
+        keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+        apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android aligned.apk
+        mv aligned.apk $APK_FILE
+
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
