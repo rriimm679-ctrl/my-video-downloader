@@ -13,7 +13,7 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Set up Java 17
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -26,7 +26,7 @@ jobs:
     - name: Install System Dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ccache git libffi-dev libssl-dev python3-dev zip unzip
+        sudo apt-get install -y ccache git libffi-dev libssl-dev python3-dev zip unzip android-sdk-build-tools
 
     - name: Install Python Dependencies
       run: |
@@ -37,19 +37,15 @@ jobs:
       run: |
         buildozer -v android debug
 
-    - name: Sign APK for MIUI/Redmi
+    - name: Sign APK with Key
       run: |
-        sudo apt-get install -y apksigner zipalign
         cd bin/
         APK_FILE=$(ls *.apk)
-        zipalign -v 4 $APK_FILE aligned.apk
-        keytool -genkey -v -keystore debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-        apksigner sign --ks debug.keystore --ks-pass pass:android --key-pass pass:android aligned.apk
-        mv aligned.apk $APK_FILE
+        keytool -genkeypair -v -keystore release.keystore -alias mykey -keyalg RSA -keysize 2048 -validity 10000 -storepass 123456 -keypass 123456 -dname "CN=App,OU=Dev,O=Dev,L=City,S=State,C=US"
+        apksigner sign --ks release.keystore --ks-pass pass:123456 --key-pass pass:123456 $APK_FILE
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: app-release
         path: bin/*.apk
-        
