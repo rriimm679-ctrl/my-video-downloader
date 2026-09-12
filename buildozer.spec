@@ -1,10 +1,10 @@
 [app]
 title = Video Downloader
-package.name = videodownloader
+package.name = myvideodownloader
 package.domain = org.myapp
 source.dir = .
 source.include_exts = py,png,jpg,kv,atlas
-version = 0.2
+version = 0.3
 requirements = python3,kivy
 orientation = portrait
 fullscreen = 0
@@ -14,7 +14,7 @@ android.minapi = 21
 android.ndk = 25b
 android.accept_sdk_license = True
 android.skip_update = False
-android.archs = arm64-v8a
+android.archs = arm64-v8a, armeabi-v7a
 p4a.branch = master
 
 [buildozer]
